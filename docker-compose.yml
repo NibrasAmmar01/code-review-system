@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  code-review-agent:
+    build: .
+    image: code-review-agent:latest
+    container_name: code-review-agent
+    volumes:
+      - ./reports:/app/reports
+      - ./config:/app/config:ro
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+    command: serve --port 3000 --host 0.0.0.0
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - code-review-network
+
+  # Optional: Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: code-review-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - code-review-network
+    restart: unless-stopped
+
+  # Optional: PostgreSQL for storing results
+  postgres:
+    image: postgres:15-alpine
+    container_name: code-review-db
+    environment:
+      POSTGRES_DB: code_review
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - code-review-network
+    restart: unless-stopped
+
+networks:
+  code-review-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres-data:
