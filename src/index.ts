@@ -6,10 +6,10 @@ import ora from 'ora';
 import inquirer from 'inquirer';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { AnalysisEngine } from '../core/AnalysisEngine';
-import { AnalysisTarget, AnalysisConfig } from '../types';
-import { defaultConfig } from '../config/defaults';
-import { validateUrl, validatePath } from '../utils/validators';
+import { AnalysisEngine } from '../src/core/AnalysisEngine';
+import { AnalysisTarget, AnalysisConfig } from '../src/types';
+import { defaultConfig } from 'src/config/defaults';
+import { validateUrl, validatePath } from '@utils/validators';
 
 const program = new Command();
 
